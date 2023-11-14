@@ -10,6 +10,7 @@ export default function SidebarButton(props) {
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     window.location.reload();
     setSignOutFlag(true);
   };

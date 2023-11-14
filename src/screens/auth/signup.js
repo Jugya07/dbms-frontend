@@ -23,20 +23,22 @@ const App = () => {
       .then((response) => {
         console.log(response.data);
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", response.data.user);
         window.location.reload();
       })
       .catch((error) => {
         console.error(error);
       });
-  };
+    };
 
-  const handleSignIn = () => {
-    axios
+    const handleSignIn = () => {
+      axios
       .post("http://localhost:5000/api/users/login", formData)
       .then((response) => {
         console.log(response.data);
         console.log(response.data.token);
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", response.data.user);
         window.location.reload();
       })
       .catch((error) => {

@@ -17,87 +17,98 @@ export default function Player() {
 
   useEffect(() => {
     if (location.state) {
-      if(window.localStorage.getItem("page")==="playlist"){
+      if (window.localStorage.getItem("page") === "playlist") {
         axios
-        .get("http://localhost:5000/api/playlistSongs/" + location.state?.id )
-        .then((res) => {
-          console.log(res.data.data)
-          const ids=res.data.data.map((id)=>id.SongID )
-          console.log("ids -> ",ids)
-          axios
-          .get(`http://localhost:5000/api/songs`)
-          .then((res)=>{
-            console.log('response', res.data.data)
-            let data=res.data.data.filter(data=>ids.includes(data.SongID))
-            console.log("data -> ",data)
-            console.log("currentTrack -> ",data[0])
-            setTracks(data);
-            setCurrentTrack(data[currentIndex]);
-            setLoading(false);
+          .get("http://localhost:5000/api/playlistSongs/" + location.state?.id)
+          .then((res) => {
+            console.log(res.data.data);
+            const ids = res.data.data.map((id) => id.SongID);
+            console.log("ids -> ", ids);
+            axios.get(`http://localhost:5000/api/songs`).then((res) => {
+              console.log("response", res.data.data);
+              let data = res.data.data.filter((data) =>
+                ids.includes(data.SongID)
+              );
+              console.log("data -> ", data);
+              console.log("currentTrack -> ", data[0]);
+              setTracks(data);
+              setCurrentTrack(data[currentIndex]);
+              setLoading(false);
+            });
+          });
+      } else {
+        axios
+          .get("http://localhost:5000/api/songs/" + location.state?.id)
+          .then((res) => {
+            console.log("song page ", res.data.data);
+            setCurrentTrack(res.data.data);
+            axios.get(`http://localhost:5000/api/songs`).then((res) => {
+              console.log("response", res.data.data);
+              console.log("data -> ", res.data.data);
+              setTracks(res.data.data);
+              setLoading(false);
+            });
           })
-        });
+          .catch((error) => {
+            if (error.response) {
+              // The request was made, but the server responded with a status code that falls out of the range of 2xx
+              console.log(error.response.data);
+              console.log(error.response.status);
+              console.log(error.response.headers);
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              console.log("Error", error.message);
+            }
+          });
       }
-      else{
-        axios
-        .get("http://localhost:5000/api/songs/" + location.state?.id )
-        .then((res) => {
-          console.log("song page ",res.data.data)
-          setCurrentTrack(res.data.data);
-          axios
-          .get(`http://localhost:5000/api/songs`)
-          .then((res)=>{
-            console.log('response', res.data.data)
-            console.log("data -> ",res.data.data)
-            setTracks(res.data.data);
-            setLoading(false);
-          })  
-        })
-        .catch(error => {
-          if (error.response) {
-            // The request was made, but the server responded with a status code that falls out of the range of 2xx
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-          } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log('Error', error.message);
-          }
-        })
-        ;
-      }
-    
     }
+    console.log(currentTrack);
   }, [location.state]);
 
   useEffect(() => {
-    if (tracks.length > 0)
-    setCurrentTrack(tracks[currentIndex]);
+    if (tracks.length > 0) setCurrentTrack(tracks[currentIndex]);
   }, [currentIndex]);
 
-  // console.log(location)
-  return (
-    <div className='screen-container'>
-    {
-      loading?(
-        <p>Loading</p>
-      ):(<div className='screen-container'>
-             <div className="left-player-body">
-        <AudioPLayer
-            currentTrack={currentTrack}
-            total={tracks}
-            currentIndex={currentIndex}
-            setCurrentIndex={setCurrentIndex}
-          />
-
-        {/* <Widgets artistID={currentTrack?.album?.artists[0]?.id} /> */}
-      </div>
-      <div className="right-player-body">
-        <SongCard album={currentTrack} />
-        <Queue tracks={tracks} setCurrentIndex={setCurrentIndex} />
-      </div>
-        </div>
-      )
+  const handleClick = async () => {
+    const apiUrl = "http://localhost:5000/api/favorites";
+    const user = localStorage.getItem("user");
+    const postData = {
+      user: +user,
+      song: location.state.id,
+    };
+    try {
+      const response = await axios.post(apiUrl, postData);
+    } catch (error) {
+      console.log(error);
     }
+  };
+
+  return (
+    <div className="screen-container">
+      {loading ? (
+        <p>Loading</p>
+      ) : (
+        <div className="screen-container">
+          <div className="left-player-body">
+            <AudioPLayer
+              currentTrack={currentTrack}
+              total={tracks}
+              currentIndex={currentIndex}
+              setCurrentIndex={setCurrentIndex}
+            />
+            <div className="fav-div">
+              <button className="fav-btn" onClick={handleClick}>
+                Add to Favorites
+              </button>
+            </div>
+            {/* <Widgets artistID={currentTrack?.album?.artists[0]?.id} /> */}
+          </div>
+          <div className="right-player-body">
+            <SongCard album={currentTrack} />
+            <Queue tracks={tracks} setCurrentIndex={setCurrentIndex} />
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }

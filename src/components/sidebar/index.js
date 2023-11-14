@@ -22,7 +22,7 @@ export default function Sidebar() {
         <SidebarButton title="Home" to="/feed" icon={<MdSpaceDashboard/>}/>
         {/* <SidebarButton title="Trending" to="/trending" icon={<FaGripfire/>}/> */}
         <SidebarButton title="Player" to="/player" icon={<FaPlay/>}/>
-        <SidebarButton title="Favorites" to="/favorities" icon={<MdFavorite/>}/>
+        <SidebarButton title="Playlists" to="/playlists" icon={<MdFavorite/>}/>
         <SidebarButton title="Library" to="/" icon={<IoLibrary/>}/>
       </div>
       <SidebarButton title="Sign Out" to="" icon={<FaSignOutAlt/>}/>

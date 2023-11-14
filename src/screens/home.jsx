@@ -4,7 +4,7 @@ import Library from './library'
 import Feed from './feed'
 import Trendings from './trendings'
 import Player from './player'
-import Favorites from './favorites'
+import Playlists from './playlists'
 import './home.css'
 import Sidebar from '../components/sidebar'
 // import Login from './auth/login'
@@ -30,7 +30,7 @@ export default function Home() {
                 <Route path='/feed' element={<Feed/>}/>
                 {/* <Route path='/trending' element={<Trendings/>}/> */}
                 <Route path='/player' element={<Player/>}/>
-                <Route path='/favorities' element={<Favorites/>}/>
+                <Route path='/playlists' element={<Playlists/>}/>
             </Routes>
           </div>
     </Router>

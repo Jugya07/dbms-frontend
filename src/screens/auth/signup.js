@@ -1,14 +1,16 @@
-import "./login.css"
+import "./login.css";
 import React, { useState } from "react";
-import axios from 'axios';
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const App = () => {
   const [signIn, setSignIn] = useState(true);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: ''
+    name: "",
+    email: "",
+    password: "",
   });
+  const [tog, setTog] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -16,9 +18,12 @@ const App = () => {
   };
 
   const handleSignUp = () => {
-    axios.post('http://localhost:5000/api/users', formData)
+    axios
+      .post("http://localhost:5000/api/users", formData)
       .then((response) => {
         console.log(response.data);
+        localStorage.setItem("token", response.data.token);
+        window.location.reload();
       })
       .catch((error) => {
         console.error(error);
@@ -26,19 +31,17 @@ const App = () => {
   };
 
   const handleSignIn = () => {
-    axios.post('http://localhost:5000/api/users/login', formData)
+    axios
+      .post("http://localhost:5000/api/users/login", formData)
       .then((response) => {
         console.log(response.data);
         console.log(response.data.token);
-               localStorage.setItem("token", response.data.token);
+        localStorage.setItem("token", response.data.token);
+        window.location.reload();
       })
       .catch((error) => {
         console.error(error);
       });
-  };
-
-  const toggleSignIn = () => {
-    setSignIn(!signIn);
   };
 
   return (
@@ -86,7 +89,7 @@ const App = () => {
             value={formData.password}
             onChange={handleInputChange}
           />
-          <a href='#'>Forgot your password?</a>
+          {/* <a href='#'>Forgot your password?</a> */}
           <button onClick={handleSignIn}>Sign In</button>
         </div>
       )}
@@ -95,13 +98,15 @@ const App = () => {
         <div className="overlay">
           <div className="left-overlay-panel">
             <h2>Welcome Back!</h2>
-            <p>To keep connected with us, please login with your personal info.</p>
-            <button onClick={toggleSignIn}>Sign In</button>
+            <p>
+              To keep connected with us, please login with your personal info.
+            </p>
+            <button onClick={() => setSignIn(false)}>Sign In</button>
           </div>
           <div className="right-overlay-panel">
             <h2>Hello, Friend!</h2>
             <p>Enter your personal details and start your journey with us.</p>
-            <button onClick={toggleSignIn}>Sign Up</button>
+            <button onClick={() => setSignIn(true)}>Sign Up</button>
           </div>
         </div>
       </div>

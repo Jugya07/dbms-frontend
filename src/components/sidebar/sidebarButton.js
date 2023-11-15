@@ -1,18 +1,17 @@
 import React from "react";
 import "./sidebarButton.css";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IconContext } from "react-icons";
-import { useState } from "react";
 
 export default function SidebarButton(props) {
   const location = useLocation();
-  const [signOutFlag, setSignOutFlag] = useState(false);
+  const navigate = useNavigate();
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    navigate("/");
     window.location.reload();
-    setSignOutFlag(true);
   };
 
   const isActive = location.pathname === props.to;

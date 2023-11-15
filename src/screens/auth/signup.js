@@ -22,17 +22,17 @@ const App = () => {
       .post("http://localhost:5000/api/users", formData)
       .then((response) => {
         console.log(response.data);
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", response.data.user);
+        // localStorage.setItem("token", response.data.token);
+        // localStorage.setItem("user", response.data.user);
         window.location.reload();
       })
       .catch((error) => {
         console.error(error);
       });
-    };
+  };
 
-    const handleSignIn = () => {
-      axios
+  const handleSignIn = () => {
+    axios
       .post("http://localhost:5000/api/users/login", formData)
       .then((response) => {
         console.log(response.data);
